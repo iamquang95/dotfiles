@@ -26,7 +26,7 @@ KEYTIMEOUT=1
 
 ### kitty
 # Completion for kitty
-kitty + complete setup zsh | source /dev/stdin
+# kitty + complete setup zsh | source /dev/stdin
 
 typeset -A ZSH_HIGHLIGHT_STYLES
 ZSH_HIGHLIGHT_STYLES[cursor]=underline
@@ -76,5 +76,23 @@ case `uname` in
   ;;
 esac
 
+alias vim=nvim
+export VISUAL=nvim
+export EDITOR="$VISUAL"
 
-PROMPT='%{$fg[yellow]%}[%D{%f/%m/%y} %D{%L:%M:%S}]'$PROMPT
+### PROMPT='%{$fg[yellow]%}[%D{%f/%m/%y} %D{%L:%M:%S}]'$PROMPT
+
+
+PATH=$PATH:$HOME/.cargo/bin
+PATH=$PATH:$HOME/.yarn/bin
+
+rcf-append() {
+  rcf
+  read mode cmd < /tmp/rcf.cmd
+  RBUFFER=""
+  LBUFFER="${cmd}"
+  zle reset-prompt
+  if [[ "${mode}" == "run" ]]; then zle accept-line; fi
+}
+zle -N rcf-append
+bindkey '^R' rcf-append # Or whatever keybinding you want
